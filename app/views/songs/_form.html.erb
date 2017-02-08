@@ -1,14 +1,5 @@
 <%= form_for([@artist, @song]) do |f| %>
-
-  <% if @song.errors.any? %>
-  <h4><%= pluralize(@song.errors.count, "error") %> prohibited this record from being saved:</h4>
-  <ul>
-    <% @song.errors.full_messages.each do |error| %>
-    <%= error %>
-    <% end %>
-  </ul>
-  <% end %>
-
+  <%= render partial: 'shared/errors', locals: { target: @song } %>
   <%= f.label :title %>
   <%= f.text_field :title %>
 
