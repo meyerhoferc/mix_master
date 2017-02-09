@@ -82,11 +82,44 @@ describe ArtistsController, type: :controller do
         expect(assigns(:artist)).to eq(artist)
       end
 
-      it "assigns to requested artist to @artist" do
+      it "assigns requested artist to @artist" do
         artist = create(:artist)
         put :update, {id: artist.to_param, artist: attributes_for(:artist, name: "Courtney")}
         expect(assigns(:artist)).to eq(artist)
       end
+
+      it 'redirects to the artist' do
+        artist = create(:artist)
+        put :update, {id: artist.to_param, artist: attributes_for(:artist, name: "Kurt")}
+        expect(response).to redirect_to(artist_path(artist))
+      end
+    end
+
+    context "with invalid params" do
+      it 'assigns the artist as @artist' do
+        artist = create(:artist)
+        put :update, {id: artist.to_param, artist: attributes_for(:artist, name: nil)}
+        expect(assigns(:artist)).to eq(artist)
+      end
+
+      it 're-renders the edit template' do
+        artist = create(:artist)
+        put :update, {id: artist.to_param, artist: attributes_for(:artist, name: nil)}
+        expect(response).to render_template(:edit)
+      end
+    end
+  end
+
+  describe "DELETE #destroy" do
+    it 'destroys the required artist' do
+      artist = create(:artist)
+      expect { delete :destroy, {id: artist.to_param}}.to change(Artist, :count).by(-1)
+    end
+
+    it "redirects to the artists list" do
+      artist = create(:artist)
+      delete :destroy, {id: artist.to_param}
+      expect(response).to redirect_to(artists_path)
     end
   end
 end
